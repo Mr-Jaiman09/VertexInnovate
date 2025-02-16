@@ -1,0 +1,24 @@
+{
+  "name": "vertexinnovate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mr-Jaiman09/VertexInnovate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Mr-Jaiman09/VertexInnovate/issues"
+  },
+  "homepage": "https://github.com/Mr-Jaiman09/VertexInnovate#readme",
+  "dependencies": {
+    "flask": "^0.2.10"
+  }
+}
