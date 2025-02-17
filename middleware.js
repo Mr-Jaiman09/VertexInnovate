@@ -1,20 +1,55 @@
-const jwt = require('jsonwebtoken');
+// middleware.js
+import { NextResponse } from 'next/server'
+import * as jose from 'jose'
 
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+export const config = {
+  matcher: [
+    '/api/:path*'
+  ]
+}
 
-  if (!token) {
-    return res.status(401).json({ error: 'Access denied' });
+export default async function middleware(request) {
+  // Don't apply middleware to auth routes
+  if (request.nextUrl.pathname.startsWith('/api/auth')) {
+    return NextResponse.next()
   }
 
   try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
-    next();
-  } catch (error) {
-    res.status(400).json({ error: 'Invalid token' });
-  }
-};
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader) {
+      return new NextResponse(
+        JSON.stringify({ error: 'Authorization required' }),
+        { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
 
-module.exports = { authenticateToken };
+    const token = authHeader.split(' ')[1]
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET)
+    
+    const { payload } = await jose.jwtVerify(token, secret)
+
+    // Add user info to request headers
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-user-id', payload.sub)
+
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    })
+  } catch (error) {
+    return new NextResponse(
+      JSON.stringify({ 
+        error: 'Invalid token',
+        details: error.message 
+      }),
+      { 
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+  }
+}

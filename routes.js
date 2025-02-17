@@ -1,60 +1,100 @@
-const express = require('express');
-const router = express.Router();
-const supabase = require('../config/supabase');
-const jwt = require('jsonwebtoken');
-const { body, validationResult } = require('express-validator');
+// pages/api/auth/[...route].js
+import { supabase } from '@/lib/supabase'
+import * as jose from 'jose'
+import { validateEmail } from '@/middleware/auth'
 
-router.post('/register', [
-  body('email').isEmail(),
-  body('password').isLength({ min: 6 }),
-  body('name').notEmpty()
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+export const config = {
+  runtime: 'edge'
+}
+
+export default async function handler(req) {
+  if (req.method !== 'POST') {
+    return new Response(
+      JSON.stringify({ error: 'Method not allowed' }), 
+      { status: 405, headers: { 'Content-Type': 'application/json' } }
+    )
   }
 
   try {
-    const { email, password, name } = req.body;
-    
-    const { data: user, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name
-        }
-      }
-    });
+    const { route } = req.query
+    const body = await req.json()
 
-    if (error) throw error;
+    if (route === 'register') {
+      return handleRegister(body)
+    } else if (route === 'login') {
+      return handleLogin(body)
+    }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
-    res.json({ user, token });
+    return new Response(
+      JSON.stringify({ error: 'Route not found' }), 
+      { status: 404, headers: { 'Content-Type': 'application/json' } }
+    )
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return new Response(
+      JSON.stringify({ error: error.message }), 
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    )
   }
-});
+}
 
-router.post('/login', [
-  body('email').isEmail(),
-  body('password').exists()
-], async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    
-    const { data: { user }, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) throw error;
-
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
-    res.json({ user, token });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+async function handleRegister({ email, password, name }) {
+  if (!email || !validateEmail(email)) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid email' }), 
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    )
   }
-});
 
-module.exports = router;
+  if (!password || password.length < 6) {
+    return new Response(
+      JSON.stringify({ error: 'Password must be at least 6 characters' }), 
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    )
+  }
+
+  if (!name) {
+    return new Response(
+      JSON.stringify({ error: 'Name is required' }), 
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    )
+  }
+
+  const { data: user, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { name } }
+  })
+
+  if (error) throw error
+
+  const token = await generateToken(user.id)
+
+  return new Response(
+    JSON.stringify({ user, token }), 
+    { status: 200, headers: { 'Content-Type': 'application/json' } }
+  )
+}
+
+async function handleLogin({ email, password }) {
+  const { data: { user }, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if (error) throw error
+
+  const token = await generateToken(user.id)
+
+  return new Response(
+    JSON.stringify({ user, token }), 
+    { status: 200, headers: { 'Content-Type': 'application/json' } }
+  )
+}
+
+async function generateToken(userId) {
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET)
+  return await new jose.SignJWT({ sub: userId })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('24h')
+    .sign(secret)
+}

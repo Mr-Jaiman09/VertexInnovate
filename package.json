@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "repository": {
     "type": "git",
@@ -19,6 +22,10 @@
   },
   "homepage": "https://github.com/Mr-Jaiman09/VertexInnovate#readme",
   "dependencies": {
-    "flask": "^0.2.10"
+    "@supabase/supabase-js": "^2.39.0",
+    "jose": "^5.2.0",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
