@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Details</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background-color: #f0f2f5;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 3px solid #2575fc;
+            color: #2575fc;
+        }
+
+        /* Form Styles */
+        .content {
+            padding: 30px;
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2575fc;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #2575fc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: #1a64e0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.2);
+        }
+
+        /* View Styles */
+        .detail-item {
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            padding: 8px 0;
+            word-wrap: break-word;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        .empty-message i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Personal Details</h1>
+            <p>Keep track of your personal information</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="input">Update Details</div>
+            <div class="tab" data-tab="view">View Details</div>
+        </div>
+
+        <div id="input-content" class="content active">
+            <form id="details-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" min="1" max="120" placeholder="Enter your age">
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender">
+                        <option value="">Select your gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Non-binary">Non-binary</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="aspirations">Aspirations</label>
+                    <textarea id="aspirations" placeholder="Share your goals and aspirations..."></textarea>
+                </div>
+
+                <button type="submit">Save Details</button>
+            </form>
+        </div>
+
+        <div id="view-content" class="content">
+            <div id="empty-view" class="empty-message">
+                <i>📝</i>
+                <p>No personal details saved yet. Please go to the Update Details tab to add your information.</p>
+            </div>
+            
+            <div id="details-view" style="display: none;">
+                <div class="detail-item">
+                    <div class="detail-label">Full Name</div>
+                    <div class="detail-value" id="view-name"></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Age</div>
+                    <div class="detail-value" id="view-age"></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Gender</div>
+                    <div class="detail-value" id="view-gender"></div>
+                </div>
+                
+                <div class="detail-item">
+                    <div class="detail-label">Aspirations</div>
+                    <div class="detail-value" id="view-aspirations"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Details saved successfully!</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const form = document.getElementById('details-form');
+            const tabs = document.querySelectorAll('.tab');
+            const toast = document.getElementById('toast');
+            const emptyView = document.getElementById('empty-view');
+            const detailsView = document.getElementById('details-view');
+            
+            // Load saved details if they exist
+            loadSavedDetails();
+            checkForExistingData();
+            
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-content`).classList.add('active');
+                    
+                    if (tabId === 'view') {
+                        updateDetailView();
+                    }
+                });
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveDetails();
+                showToast();
+            });
+            
+            function saveDetails() {
+                const details = {
+                    name: document.getElementById('name').value,
+                    age: document.getElementById('age').value,
+                    gender: document.getElementById('gender').value,
+                    aspirations: document.getElementById('aspirations').value
+                };
+                
+                localStorage.setItem('personalDetails', JSON.stringify(details));
+                checkForExistingData();
+            }
+            
+            function loadSavedDetails() {
+                const savedDetails = localStorage.getItem('personalDetails');
+                if (savedDetails) {
+                    const details = JSON.parse(savedDetails);
+                    
+                    document.getElementById('name').value = details.name || '';
+                    document.getElementById('age').value = details.age || '';
+                    document.getElementById('gender').value = details.gender || '';
+                    document.getElementById('aspirations').value = details.aspirations || '';
+                }
+            }
+            
+            function updateDetailView() {
+                const savedDetails = localStorage.getItem('personalDetails');
+                if (savedDetails) {
+                    const details = JSON.parse(savedDetails);
+                    
+                    document.getElementById('view-name').textContent = details.name || 'Not specified';
+                    document.getElementById('view-age').textContent = details.age || 'Not specified';
+                    document.getElementById('view-gender').textContent = details.gender || 'Not specified';
+                    document.getElementById('view-aspirations').textContent = details.aspirations || 'Not specified';
+                }
+            }
+            
+            function checkForExistingData() {
+                const savedDetails = localStorage.getItem('personalDetails');
+                if (savedDetails) {
+                    emptyView.style.display = 'none';
+                    detailsView.style.display = 'block';
+                } else {
+                    emptyView.style.display = 'block';
+                    detailsView.style.display = 'none';
+                }
+            }
+            
+            function showToast() {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
