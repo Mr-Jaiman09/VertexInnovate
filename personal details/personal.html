@@ -4,8 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Reset and Base Styles */
+        :root {
+            --primary-color: #4361ee;
+            --primary-light: #4895ef;
+            --secondary-color: #3f37c9;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #212529;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --success-color: #38b000;
+            --input-focus: #e0e7ff;
+            --input-hover: #f0f4ff;
+            --transition-speed: 0.3s;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,153 +28,206 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
             line-height: 1.6;
-            color: #333;
-            background-color: #f5f7fa;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            padding: 30px 20px;
         }
 
         .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
 
-        /* Header Styles */
         .header {
+            padding: 25px 30px;
             background: linear-gradient(135deg, #3498db, #8e44ad);
             color: white;
-            padding: 25px 30px;
-            text-align: center;
         }
 
-        .header h1 {
+        h1 {
             font-size: 24px;
+            font-weight: 600;
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
         }
 
-        .header p {
-            opacity: 0.8;
+        h1 i {
+            margin-right: 12px;
+            font-size: 0.9em;
+        }
+
+        .subtitle {
             font-size: 14px;
+            opacity: 0.9;
         }
 
-        /* Tabs */
         .tabs {
             display: flex;
-            background-color: #f0f2f5;
+            background-color: #f5f7fa;
+            padding: 0 30px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .tab {
-            flex: 1;
-            text-align: center;
-            padding: 15px;
+            padding: 16px 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
+            background: none;
+            border: none;
+            font-size: 15px;
             font-weight: 500;
+            color: var(--text-muted);
+            position: relative;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+        }
+
+        .tab i {
+            margin-right: 8px;
+            font-size: 0.9em;
+        }
+
+        .tab:hover {
+            color: var(--primary-color);
         }
 
         .tab.active {
-            background-color: #fff;
-            border-bottom: 3px solid #2575fc;
-            color: #2575fc;
+            color: var(--primary-color);
+            font-weight: 600;
         }
 
-        /* Form Styles */
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            transform: scaleX(0.8);
+            transition: transform 0.3s;
+        }
+
         .content {
-            padding: 30px;
             display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .content.active {
             display: block;
         }
 
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
             font-weight: 500;
-            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
         }
 
-        input[type="text"],
-        input[type="number"],
-        select,
-        textarea {
+        input, select, textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
+            font-family: inherit;
             font-size: 15px;
-            transition: all 0.3s;
+            transition: all var(--transition-speed);
+            color: var(--text-color);
         }
 
-        input:focus,
-        select:focus,
-        textarea:focus {
+        input:hover, select:hover, textarea:hover {
+            background-color: var(--input-hover);
+        }
+
+        input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #2575fc;
-            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
+            border-color: var(--primary-light);
+            background-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
         }
 
         textarea {
-            min-height: 120px;
             resize: vertical;
+            min-height: 120px;
         }
 
         button {
-            background-color: #2575fc;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             padding: 12px 20px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: 100%;
-            transition: all 0.3s;
         }
 
         button:hover {
-            background-color: #1a64e0;
+            background-color: var(--secondary-color);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.2);
+            box-shadow: 0 4px 12px rgba(63, 55, 201, 0.2);
         }
 
-        /* View Styles */
         .detail-item {
             margin-bottom: 20px;
         }
 
         .detail-label {
             font-weight: 600;
-            color: #666;
+            color: var(--text-muted);
             margin-bottom: 5px;
         }
 
         .detail-value {
-            font-size: 16px;
+            font-size: 15px;
             padding: 8px 0;
-            word-wrap: break-word;
+            color: var(--text-color);
         }
 
         .empty-message {
             text-align: center;
             padding: 40px 20px;
-            color: #888;
+            color: var(--text-muted);
         }
 
         .empty-message i {
@@ -168,16 +236,18 @@
             display: block;
         }
 
-        /* Toast Notification */
         .toast {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #4caf50;
+            background-color: var(--success-color);
             color: white;
-            padding: 15px 25px;
-            border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
             transform: translateY(100px);
             opacity: 0;
             transition: all 0.3s;
@@ -189,11 +259,10 @@
             opacity: 1;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .container {
                 border-radius: 0;
-                box-shadow: none;
+                margin: -30px -20px;
             }
             
             .header {
@@ -209,82 +278,109 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Personal Details</h1>
-            <p>Keep track of your personal information</p>
+            <h1><i class="fas fa-user"></i> Personal Details</h1>
+            <div class="subtitle">Keep track of your personal information</div>
         </div>
 
         <div class="tabs">
-            <div class="tab active" data-tab="input">Update Details</div>
-            <div class="tab" data-tab="view">View Details</div>
+            <div class="tab active" data-tab="input">
+                <i class="fas fa-edit"></i> Update Details
+            </div>
+            <div class="tab" data-tab="view">
+                <i class="fas fa-eye"></i> View Details
+            </div>
         </div>
 
         <div id="input-content" class="content active">
             <form id="details-form">
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" placeholder="Enter your full name">
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i> Basic Information
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" min="1" max="120" placeholder="Enter your age">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender">
+                            <option value="">Select your gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Non-binary">Non-binary</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="age">Age</label>
-                    <input type="number" id="age" min="1" max="120" placeholder="Enter your age">
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-star"></i> Goals & Aspirations
+                    </div>
+                    <div class="form-group">
+                        <label for="aspirations">Share your goals and aspirations</label>
+                        <textarea id="aspirations" placeholder="What are your personal and professional goals?"></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <select id="gender">
-                        <option value="">Select your gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Non-binary">Non-binary</option>
-                        <option value="Prefer not to say">Prefer not to say</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="aspirations">Aspirations</label>
-                    <textarea id="aspirations" placeholder="Share your goals and aspirations..."></textarea>
-                </div>
-
-                <button type="submit">Save Details</button>
+                <button type="submit">
+                    <i class="fas fa-save"></i> Save Details
+                </button>
             </form>
         </div>
 
         <div id="view-content" class="content">
             <div id="empty-view" class="empty-message">
-                <i>📝</i>
+                <i class="fas fa-folder-open"></i>
                 <p>No personal details saved yet. Please go to the Update Details tab to add your information.</p>
             </div>
             
             <div id="details-view" style="display: none;">
-                <div class="detail-item">
-                    <div class="detail-label">Full Name</div>
-                    <div class="detail-value" id="view-name"></div>
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i> Basic Information
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Full Name</div>
+                        <div class="detail-value" id="view-name"></div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Age</div>
+                        <div class="detail-value" id="view-age"></div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">Gender</div>
+                        <div class="detail-value" id="view-gender"></div>
+                    </div>
                 </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label">Age</div>
-                    <div class="detail-value" id="view-age"></div>
-                </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label">Gender</div>
-                    <div class="detail-value" id="view-gender"></div>
-                </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label">Aspirations</div>
-                    <div class="detail-value" id="view-aspirations"></div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-star"></i> Goals & Aspirations
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-value" id="view-aspirations"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="toast" class="toast">Details saved successfully!</div>
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Details saved successfully!</span>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Elements
             const form = document.getElementById('details-form');
             const tabs = document.querySelectorAll('.tab');
             const toast = document.getElementById('toast');
@@ -372,6 +468,3 @@
                 }, 3000);
             }
         });
-    </script>
-</body>
-</html>
