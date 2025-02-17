@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Profile Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-light: #4895ef;
+            --secondary-color: #3f37c9;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #212529;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --success-color: #38b000;
+            --input-focus: #e0e7ff;
+            --input-hover: #f0f4ff;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 30px 20px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--card-color);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+
+        .header {
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        h1 i {
+            margin-right: 12px;
+            font-size: 0.9em;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: #f5f7fa;
+            padding: 0 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab {
+            padding: 16px 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-muted);
+            position: relative;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+        }
+
+        .tab i {
+            margin-right: 8px;
+            font-size: 0.9em;
+        }
+
+        .tab:hover {
+            color: var(--primary-color);
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            transform: scaleX(0.8);
+            transition: transform 0.3s;
+        }
+
+        .tab.active:hover::after {
+            transform: scaleX(1);
+        }
+
+        .content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 15px;
+            transition: all var(--transition-speed);
+            color: var(--text-color);
+        }
+
+        input:hover, textarea:hover {
+            background-color: var(--input-hover);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            background-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(63, 55, 201, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f5f7fa;
+            box-shadow: none;
+        }
+
+        .detail-view {
+            line-height: 1.8;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--primary-color);
+        }
+
+        .section-title:first-child {
+            margin-top: 0;
+        }
+
+        .detail-item {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .label {
+            flex: 0 0 200px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .value {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .empty-value {
+            color: var(--text-muted);
+            font-style: italic;
+            opacity: 0.7;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .skill-tag {
+            background-color: #e9f0ff;
+            border-radius: 6px;
+            padding: 6px 12px;
+            color: var(--primary-color);
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .skill-tag:hover {
+            background-color: var(--primary-light);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+                margin: -30px -20px;
+                height: calc(100vh - 0px);
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .tabs {
+                padding: 0 10px;
+            }
+            
+            .tab {
+                padding: 15px 10px;
+                font-size: 14px;
+            }
+            
+            .content {
+                padding: 20px;
+                flex: 1;
+                overflow-y: auto;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+            }
+            
+            .label {
+                flex: 0 0 100%;
+                margin-bottom: 5px;
+            }
+            
+            .buttons {
+                flex-direction: column-reverse;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-check"></i> Professional Profile Manager</h1>
+            <div class="subtitle">Track your career progress and achievements in one place</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="input">
+                <i class="fas fa-edit"></i> Update Profile
+            </button>
+            <button class="tab" data-tab="view">
+                <i class="fas fa-eye"></i> View Profile
+            </button>
+        </div>
+
+        <div id="input-content" class="content active">
+            <form id="details-form">
+                <div class="section-title">Personal & Educational Details</div>
+                
+                <div class="form-group">
+                    <label for="skills">Professional Skills</label>
+                    <textarea id="skills" placeholder="Enter your skills, separated by commas (e.g., JavaScript, Python, Project Management)"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cgpa">CGPA in Last Semester</label>
+                        <input type="number" id="cgpa" step="0.01" min="0" max="10" placeholder="e.g., 3.85">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profession">Current Profession</label>
+                        <input type="text" id="profession" placeholder="e.g., Software Developer">
+                    </div>
+                </div>
+
+                <div class="section-title">Experience & Achievements</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="hackathons-participated">Hackathons Participated</label>
+                        <input type="number" id="hackathons-participated" min="0" placeholder="Total number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hackathons-won">Hackathons Won</label>
+                        <input type="number" id="hackathons-won" min="0" placeholder="Total number">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="internships">Completed Internships</label>
+                        <input type="number" id="internships" min="0" placeholder="Total number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projects">Industry-Oriented Projects</label>
+                        <input type="number" id="projects" min="0" placeholder="Total number">
+                    </div>
+                </div>
+
+                <div class="section-title">Financial Information</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="current-salary">Current Annual Salary</label>
+                        <input type="text" id="current-salary" placeholder="e.g., $75,000 or NA if not applicable">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="desired-salary">Desired Annual Salary</label>
+                        <input type="text" id="desired-salary" placeholder="e.g., $90,000">
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button type="button" id="reset-btn" class="btn-secondary">
+                        <i class="fas fa-undo"></i> Reset Form
+                    </button>
+                    <button type="submit">
+                        <i class="fas fa-save"></i> Save Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="view-content" class="content">
+            <div id="empty-state" class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <h3>No Profile Data Yet</h3>
+                <p>Go to the Update Profile tab to add your professional details.</p>
+            </div>
+            
+            <div id="profile-data" style="display: none;">
+                <div class="section-title">Personal & Educational Details</div>
+                <div class="detail-view">
+                    <div class="detail-item">
+                        <div class="label">Professional Skills</div>
+                        <div class="value">
+                            <div class="skills-list" id="view-skills"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="label">CGPA (Last Semester)</div>
+                        <div class="value" id="view-cgpa"></div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="label">Current Profession</div>
+                        <div class="value" id="view-profession"></div>
+                    </div>
+                </div>
+                
+                <div class="section-title">Experience & Achievements</div>
+                <div class="detail-view">
+                    <div class="detail-item">
+                        <div class="label">Hackathons Participated</div>
+                        <div class="value" id="view-hackathons-participated"></div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="label">Hackathons Won</div>
+                        <div class="value" id="view-hackathons-won"></div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="label">Completed Internships</div>
+                        <div class="value" id="view-internships"></div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="label">Industry Projects</div>
+                        <div class="value" id="view-projects"></div>
+                    </div>
+                </div>
+                
+                <div class="section-title">Financial Information</div>
+                <div class="detail-view">
+                    <div class="detail-item">
+                        <div class="label">Current Salary</div>
+                        <div class="value" id="view-current-salary"></div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="label">Desired Salary</div>
+                        <div class="value" id="view-desired-salary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Profile saved successfully!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const tabs = document.querySelectorAll('.tab');
+            const form = document.getElementById('details-form');
+            const resetBtn = document.getElementById('reset-btn');
+            const toast = document.getElementById('toast');
+            const emptyState = document.getElementById('empty-state');
+            const profileData = document.getElementById('profile-data');
+            
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-content`).classList.add('active');
+                    
+                    if (tabId === 'view') {
+                        updateDetailView();
+                    }
+                });
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveDetails();
+                showToast('Profile saved successfully!');
+            });
+            
+            // Reset button
+            resetBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset the form? All unsaved changes will be lost.')) {
+                    loadSavedDetails();
+                }
+            });
+
+            // Load saved details if they exist
+            loadSavedDetails();
+            checkForExistingData();
+            
+            function showToast(message) {
+                document.getElementById('toast-message').textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+            
+            function checkForExistingData() {
+                const savedDetails = localStorage.getItem('professionalDetails');
+                if (savedDetails) {
+                    emptyState.style.display = 'none';
+                    profileData.style.display = 'block';
+                } else {
+                    emptyState.style.display = 'block';
+                    profileData.style.display = 'none';
+                }
+            }
+        });
+
+        function saveDetails() {
+            const details = {
+                skills: document.getElementById('skills').value.split(',').map(s => s.trim()).filter(s => s),
+                cgpa: parseFloat(document.getElementById('cgpa').value) || 0,
+                profession: document.getElementById('profession').value,
+                hackathonsParticipated: parseInt(document.getElementById('hackathons-participated').value) || 0,
+                hackathonsWon: parseInt(document.getElementById('hackathons-won').value) || 0,
+                internships: parseInt(document.getElementById('internships').value) || 0,
+                projects: parseInt(document.getElementById('projects').value) || 0,
+                currentSalary: document.getElementById('current-salary').value || 'NA',
+                desiredSalary: document.getElementById('desired-salary').value || ''
+            };
+
+            localStorage.setItem('professionalDetails', JSON.stringify(details));
+            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('profile-data').style.display = 'block';
+        }
+
+        function loadSavedDetails() {
+            const savedDetails = localStorage.getItem('professionalDetails');
+            if (savedDetails) {
+                const details = JSON.parse(savedDetails);
+                
+                // Populate form fields
+                document.getElementById('skills').value = details.skills.join(', ');
+                document.getElementById('cgpa').value = details.cgpa || '';
+                document.getElementById('profession').value = details.profession || '';
+                document.getElementById('hackathons-participated').value = details.hackathonsParticipated || '';
+                document.getElementById('hackathons-won').value = details.hackathonsWon || '';
+                document.getElementById('internships').value = details.internships || '';
+                document.getElementById('projects').value = details.projects || '';
+                document.getElementById('current-salary').value = details.currentSalary || '';
+                document.getElementById('desired-salary').value = details.desiredSalary || '';
+            }
+        }
+
+        function updateDetailView() {
+            const savedDetails = localStorage.getItem('professionalDetails');
+            if (savedDetails) {
+                const details = JSON.parse(savedDetails);
+                
+                // Helper function to display empty state
+                const displayValue = (value, element) => {
+                    if (value && value !== '0' && value !== 'NA' && value.length !== 0) {
+                        element.textContent = value;
+                        element.classList.remove('empty-value');
+                    } else {
+                        element.textContent = 'Not specified';
+                        element.classList.add('empty-value');
+                    }
+                };
+                
+                // Update skills
+                const skillsContainer = document.getElementById('view-skills');
+                skillsContainer.innerHTML = '';
+                if (details.skills && details.skills.length > 0) {
+                    details.skills.forEach(skill => {
+                        const skillTag = document.createElement('span');
+                        skillTag.className = 'skill-tag';
+                        skillTag.textContent = skill;
+                        skillsContainer.appendChild(skillTag);
+                    });
+                } else {
+                    const emptySkills = document.createElement('span');
+                    emptySkills.className = 'empty-value';
+                    emptySkills.textContent = 'No skills specified';
+                    skillsContainer.appendChild(emptySkills);
+                }
+                
+                // Update other fields
+                displayValue(details.cgpa, document.getElementById('view-cgpa'));
+                displayValue(details.profession, document.getElementById('view-profession'));
+                displayValue(details.hackathonsParticipated, document.getElementById('view-hackathons-participated'));
+                displayValue(details.hackathonsWon, document.getElementById('view-hackathons-won'));
+                displayValue(details.internships, document.getElementById('view-internships'));
+                displayValue(details.projects, document.getElementById('view-projects'));
+                displayValue(details.currentSalary, document.getElementById('view-current-salary'));
+                displayValue(details.desiredSalary, document.getElementById('view-desired-salary'));
+            }
+        }
+    </script>
+</body>
+</html>
